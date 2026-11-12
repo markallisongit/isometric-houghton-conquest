@@ -1,0 +1,148 @@
+{
+ "stops": [
+  {
+   "n": 1,
+   "year": "1086",
+   "title": "Houghton in Domesday Book",
+   "text": "Domesday Book lists Houghton in the hundred of Redbornestoke. Adeliza de Grandmesnil held it from the king, and a man called Arnold held the land from her.",
+   "x": 504555,
+   "y": 241553,
+   "h": 0,
+   "zoom": 0.25,
+   "source": {
+    "label": "Wikipedia: Houghton Conquest",
+    "url": "https://en.wikipedia.org/wiki/Houghton_Conquest"
+   },
+   "more": null,
+   "photos": []
+  },
+  {
+   "n": 2,
+   "year": "1850s",
+   "title": "The village shop",
+   "text": "A house is built in the village partly from an old manor house, most likely Conquestbury. Today it is the village shop and post office.",
+   "x": 504571.9,
+   "y": 241600.8,
+   "h": 0,
+   "zoom": 1.2,
+   "source": {
+    "label": "Wikipedia: Houghton Conquest",
+    "url": "https://en.wikipedia.org/wiki/Houghton_Conquest"
+   },
+   "more": null,
+   "photos": []
+  },
+  {
+   "n": 3,
+   "year": "1880",
+   "title": "The east window",
+   "text": "John William Burgon, Dean of Chichester, gives All Saints its stained-glass east window, in memory of three benefactors.",
+   "x": 504360,
+   "y": 241429,
+   "h": 12,
+   "zoom": 1.2,
+   "source": {
+    "label": "Wikipedia: Church of All Saints",
+    "url": "https://en.wikipedia.org/wiki/Church_of_All_Saints,_Houghton_Conquest"
+   },
+   "more": null,
+   "photos": []
+  },
+  {
+   "n": 4,
+   "year": "14th century",
+   "title": "The Church of All Saints",
+   "text": "The parish church is built in the 14th century, with a nave, aisles, a chancel and a battlemented tower with six bells. Over the north door a large St Christopher is painted in the 15th century; traces of other wall paintings can still be seen.",
+   "x": 504360,
+   "y": 241429,
+   "h": 20,
+   "zoom": 1.2,
+   "source": {
+    "label": "Wikipedia: Church of All Saints",
+    "url": "https://en.wikipedia.org/wiki/Church_of_All_Saints,_Houghton_Conquest"
+   },
+   "more": "https://historicengland.org.uk/listing/the-list/list-entry/1113919",
+   "photos": []
+  },
+  {
+   "n": 5,
+   "year": "13th century",
+   "title": "The Conquest family",
+   "text": "From the 13th to the 18th century the Conquest family held a manor here, and the village took their name: Houghton Conquest. Their house, Conquestbury, stood where Bury Farm is now, beside London Lane. When the family left, it was let fall into ruin.",
+   "x": 505165,
+   "y": 240606,
+   "h": 0,
+   "zoom": 1.2,
+   "source": {
+    "label": "Wikipedia: Houghton Conquest",
+    "url": "https://en.wikipedia.org/wiki/Houghton_Conquest"
+   },
+   "more": null,
+   "photos": []
+  },
+  {
+   "n": 6,
+   "year": "1615",
+   "title": "Houghton House",
+   "text": "Mary Sidney, Countess of Pembroke, poet and patron, starts a great house on the ridge, possibly with Inigo Jones. James I visits in 1621, soon after it is finished; the Countess dies of smallpox that September.",
+   "x": 503922,
+   "y": 239484,
+   "h": 11,
+   "zoom": 1.2,
+   "source": {
+    "label": "Wikipedia: Houghton House",
+    "url": "https://en.wikipedia.org/wiki/Houghton_House"
+   },
+   "more": "https://historicengland.org.uk/listing/the-list/list-entry/1321465",
+   "photos": []
+  },
+  {
+   "n": 7,
+   "year": "1678",
+   "title": "House Beautiful",
+   "text": "John Bunyan publishes The Pilgrim's Progress. Houghton House, on the ridge south of the village, is said to be his House Beautiful, where Christian is welcomed on his way.",
+   "x": 503922,
+   "y": 239484,
+   "h": 11,
+   "zoom": 1.2,
+   "source": {
+    "label": "Wikipedia: Houghton House",
+    "url": "https://en.wikipedia.org/wiki/Houghton_House"
+   },
+   "more": null,
+   "photos": []
+  },
+  {
+   "n": 8,
+   "year": "1794",
+   "title": "The roof comes off",
+   "text": "The 5th Duke of Bedford has Houghton House stripped: the furnishings go and the roof is sold off as building material. The staircase ended up in the Swan Hotel in Bedford. The walls still stand.",
+   "x": 503922,
+   "y": 239484,
+   "h": 11,
+   "zoom": 1.2,
+   "source": {
+    "label": "Wikipedia: Houghton House",
+    "url": "https://en.wikipedia.org/wiki/Houghton_House"
+   },
+   "more": "https://www.english-heritage.org.uk/visit/places/houghton-house/",
+   "photos": []
+  },
+  {
+   "n": 9,
+   "year": "1984",
+   "title": "King's Wood and Glebe Meadows",
+   "text": "The ash and maple wood and the old meadows south of the village become a Site of Special Scientific Interest. Their rare plants had been found by a local teenager, Peter Sollars.",
+   "x": 504531,
+   "y": 239447,
+   "h": 0,
+   "zoom": 1.2,
+   "source": {
+    "label": "Wikipedia: Kings Wood and Glebe Meadows",
+    "url": "https://en.wikipedia.org/wiki/Kings_Wood_and_Glebe_Meadows,_Houghton_Conquest"
+   },
+   "more": null,
+   "photos": []
+  }
+ ]
+}
