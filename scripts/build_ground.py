@@ -1,10 +1,11 @@
 # /// script
 # requires-python = ">=3.11"
-# dependencies = ["numpy", "scipy", "pillow", "shapely"]
+# dependencies = ["numpy", "scipy", "pillow", "shapely", "pyproj"]
 # ///
-"""Paint the ground: BGT polygons in a pixel-art palette, with baked sun shadows.
+"""Paint the ground: OpenStreetMap surfaces (scripts/osm.py) in a pixel-art palette, with baked sun shadows. Land that
+OpenStreetMap leaves blank is cut into fields along the colours of the Sentinel-2 image.
 
-Output, in 2000x2000 px chunks of 500 m (0.25 m/px), row 0 north:
+Output, in chunks of CHUNK m at GROUND_RES, row 0 north:
   data/build/ground/{ix}_{iy}.png   the ground, with the roads filled in by the surfaces around them
   data/build/roads/{ix}_{iy}.png    the roads' own colours (shadows included), running on past their edges
   data/build/roads.json             the road polygons, which render/scene.js draws with hard edges
@@ -19,7 +20,7 @@ from PIL import Image, ImageDraw
 from scipy import ndimage as ndi
 
 from aerial import load_aerial
-from config import BUILD, CHUNK, CX, CY, GROUND_RES, NX as CHUNKS_X, NY as CHUNKS_Y, RAW, XMAX, XMIN, YMAX, YMIN
+from config import BUILD, CHUNK, CX, CY, GROUND_RES, LIDAR_RES, NX as CHUNKS_X, NY as CHUNKS_Y, RAW, XMAX, XMIN, YMAX, YMIN
 from sun import SUN_AZIMUTH, SUN_ELEVATION
 
 NX, NY = int((XMAX - XMIN) / GROUND_RES), int((YMAX - YMIN) / GROUND_RES)
@@ -40,6 +41,7 @@ STYLES = {
     "ditch": (98, 128, 70),
     "bank": (108, 144, 68),
     "yard": (160, 155, 140),
+    "garden": (112, 156, 68),
     "sand": (222, 204, 160),
     "asphalt": (98, 100, 106),
     "motorway": (84, 86, 92),
@@ -55,61 +57,11 @@ STYLES = {
 }
 CAT = {k: i for i, k in enumerate(STYLES)}
 WATERY = {CAT["water"]}
-SOFT = {CAT[k] for k in ("grass", "meadow", "berm", "shrub", "forest", "field", "orchard", "heath", "marsh", "ditch", "bank", "yard", "dirt", "sand", "gap")}
+SOFT = {CAT[k] for k in ("grass", "meadow", "berm", "shrub", "forest", "field", "orchard", "heath", "marsh", "ditch", "bank", "yard", "garden", "dirt", "sand", "gap")}
 
 
 def style_for(coll, p):
-    fv = p.get("fysiek_voorkomen") or ""
-    plus = p.get("plus_fysiek_voorkomen") or ""
-    func = p.get("functie") or ""
-    if coll == "waterdeel":
-        return "ditch" if fv.startswith("greppel") else "water"
-    if coll == "ondersteunendwaterdeel":
-        return "bank"
-    if coll in ("pand", "overigbouwwerk"):
-        return "building" if p.get("type") != "bassin" else "water"
-    if coll == "overbruggingsdeel":
-        return "bridge"
-    if coll == "begroeidterreindeel" or fv == "groenvoorziening":
-        return {
-            "grasland agrarisch": "meadow",
-            "grasland overig": "meadow",
-            "bouwland": "field",
-            "loofbos": "forest",
-            "gemengd bos": "forest",
-            "naaldbos": "forest",
-            "houtwal": "forest",
-            "struiken": "shrub",
-            "fruitteelt": "orchard",
-            "boomteelt": "orchard",
-            "heide": "heath",
-            "moeras": "marsh",
-        }.get(fv, "shrub" if plus in ("heesters", "bosplantsoen", "planten") else ("berm" if func == "berm" else "grass"))
-    if func == "rijbaan autosnelweg":
-        return "motorway"
-    if plus == "asfalt" or (fv == "gesloten verharding" and plus != "cementbeton"):
-        return "asphalt"
-    if plus in ("cementbeton", "beton element"):
-        return "concrete"
-    if plus == "betonstraatstenen":
-        return "concrete_pavers"
-    if plus in ("tegels", "sierbestrating"):
-        return "tiles"
-    if plus == "gebakken klinkers":
-        return "clinkers"
-    if plus == "grasklinkers":
-        return "grass_pavers"
-    if plus in ("grind", "puin") or fv == "half verhard":
-        return "gravel"
-    if fv == "open verharding":
-        return "concrete_pavers"
-    if fv == "erf":
-        return "yard"
-    if fv == "zand" or plus == "zand":
-        return "sand"
-    if fv == "onverhard":
-        return "dirt"
-    return "yard"
+    return p["style"]
 
 
 # Surfaces that are drawn as crisp polygons over the ground (see render/scene.js, makeRoads): the whole road
@@ -118,41 +70,62 @@ ROAD_STYLES = {"asphalt", "motorway", "concrete_pavers", "tiles", "clinkers", "c
 PAVED_STYLES = {"asphalt", "concrete_pavers", "tiles", "clinkers", "concrete", "gravel"}
 
 
-def is_road(coll, style):
-    if coll in ("wegdeel", "overbruggingsdeel"):
-        return style in ROAD_STYLES
-    if coll in ("ondersteunendwegdeel", "onbegroeidterreindeel"):
-        return style in PAVED_STYLES
-    return False
+def is_road(coll, style, props=None):
+    if props and props.get("bridge"):
+        return True
+    return bool(props and props.get("layer")) and style in ROAD_STYLES
 
 
 def load_polygons():
-    colls = [
-        "begroeidterreindeel",
-        "onbegroeidterreindeel",
-        "ondersteunendwaterdeel",
-        "ondersteunendwegdeel",
-        "waterdeel",
-        "wegdeel",
-        "overigbouwwerk",
-        "pand",
-        "overbruggingsdeel",
-    ]
     polys = []
-    for coll in colls:
-        for f in json.load(open(RAW / f"bgt_{coll}.geojson"))["features"]:
-            g = f["geometry"]
-            if g is None:
-                continue
-            parts = [g["coordinates"]] if g["type"] == "Polygon" else g["coordinates"] if g["type"] == "MultiPolygon" else []
-            for rings in parts:
-                ext = np.array(rings[0])[:, :2]
-                area = 0.5 * abs(np.dot(ext[:, 0], np.roll(ext[:, 1], 1)) - np.dot(ext[:, 1], np.roll(ext[:, 0], 1)))
-                # Bridges sit over water and are drawn last; everything else by size, large first.
-                prio = 2 if coll == "overbruggingsdeel" else (1 if coll in ("pand", "overigbouwwerk") else 0)
-                polys.append((prio, -area, coll, f["properties"], rings))
+    for f in json.loads((BUILD / "surfaces.json").read_text()):
+        rings = f["rings"]
+        ext = np.array(rings[0])[:, :2]
+        area = 0.5 * abs(np.dot(ext[:, 0], np.roll(ext[:, 1], 1)) - np.dot(ext[:, 1], np.roll(ext[:, 0], 1)))
+        polys.append((f["prio"], -area, "bridge" if f["bridge"] else "osm", f, rings))
+    # The footprints from scripts/build_buildings.py, so the ground under a building is the building's.
+    for ring in json.loads((BUILD / "footprints.json").read_text()):
+        rings = [[(x + CX, CY - z) for x, z in ring]]
+        polys.append((1, 0, "building", {"style": "building", "id": ""}, rings))
     polys.sort(key=lambda t: (t[0], t[1]))
     return polys
+
+
+def segment_gaps(ids, aerial, start):
+    """Cut land that no polygon covers into fields along the colours of the satellite image: k-means on the colours,
+    a mode filter, then connected pieces within hedges and roads. Returns (ids with the new fields, count)."""
+    f = 4  # work at 4x the ground pixel
+    gap = ids[::f, ::f] == 0
+    if not gap.any():
+        return ids, 0
+    col = ndi.uniform_filter(aerial[::f, ::f].astype(np.float32), (3, 3, 1))
+    rng = np.random.default_rng(3)
+    sample = col[gap][rng.choice(gap.sum(), min(50000, gap.sum()), replace=False)]
+    centers = sample[rng.choice(len(sample), 6, replace=False)]
+    for _ in range(15):
+        lab = np.argmin(((sample[:, None] - centers[None]) ** 2).sum(-1), 1)
+        centers = np.array([sample[lab == k].mean(0) if (lab == k).any() else centers[k] for k in range(len(centers))])
+    full = np.argmin(((col[..., None, :] - centers) ** 2).sum(-1), -1)
+    full = ndi.median_filter(full, size=7)
+    comps = np.zeros(full.shape, np.int32)
+    n = 0
+    for k in range(len(centers)):
+        lab, m = ndi.label(gap & (full == k))
+        comps[lab > 0] = lab[lab > 0] + n
+        n += m
+    # Pieces under 0.15 ha join their neighbour.
+    sizes = np.bincount(comps.ravel(), minlength=n + 1) * (f * GROUND_RES) ** 2
+    small = (sizes < 1500)[comps] & gap
+    comps[small] = 0
+    if (comps > 0).any():
+        idx = ndi.distance_transform_edt(comps == 0, return_distances=False, return_indices=True)
+        comps = np.where(gap, comps[idx[0], idx[1]], 0)
+    _, comps = np.unique(comps, return_inverse=True)  # renumber; 0 stays 0 (not a gap)
+    comps = comps.reshape(gap.shape)
+    count = int(comps.max())
+    up = np.repeat(np.repeat(comps, f, 0), f, 1)[: ids.shape[0], : ids.shape[1]]
+    out = np.where((ids == 0) & (up > 0), up + start, ids)
+    return out, count
 
 
 def to_px(ring):
@@ -187,10 +160,16 @@ def main():
         for hole in rings[1:]:
             d.polygon(to_px(hole), fill=0)
     ids = np.array(ids, dtype=np.int32)
+    n_real = len(polys)
+    ids, n_gap = segment_gaps(ids, aerial, n_real)
+    for k in range(n_gap):
+        polys.append((0, 0, "gap", {"style": "field", "id": f"gap{k}"}, None))
+    print(f"{n_gap} fields cut from the satellite image")
 
     # Per polygon: median aerial color, ignoring tree canopy that hides the surface.
     chm = np.load(BUILD / "chm.npy").astype(np.float32)
-    chm_hi = np.repeat(np.repeat(chm, 2, 0), 2, 1)
+    f = int(round(LIDAR_RES / GROUND_RES))
+    chm_hi = np.repeat(np.repeat(chm, f, 0), f, 1)
     lab = ids[::4, ::4].copy()
     lab[chm_hi[::4, ::4] > 2.0] = 0
     small = aerial[::4, ::4].astype(np.float32)
@@ -204,14 +183,14 @@ def main():
     stripes_dir = np.zeros(len(polys) + 1, np.float32)
     for i, (_, _, coll, props, rings) in enumerate(polys, start=1):
         # Seeded per polygon, so a field keeps its crop when the map area changes.
-        rng = np.random.default_rng(int(hashlib.md5(str(props.get("lokaal_id", i)).encode()).hexdigest()[:8], 16))
+        rng = np.random.default_rng(int(hashlib.md5(str(props.get("id") or i).encode()).hexdigest()[:8], 16))
         s = style_for(coll, props)
         cats[i] = CAT[s]
-        roads[i] = is_road(coll, s)
+        roads[i] = is_road(coll, s, props)
         c = np.array(STYLES[s], np.float32)
         m = med[i - 1]
         if s == "field":
-            # Pick a crop look per field; the photo decides whether it is green or bare.
+            # A crop look per field, nudged toward the satellite colour, which tells green crops from bare soil.
             green = m[1] > m[0] + 6
             choice = rng.random()
             if green:
@@ -222,23 +201,36 @@ def main():
                 c = np.array((206, 184, 108), np.float32)
             else:
                 c = np.array((136, 160, 76), np.float32)
-        elif s == "meadow" and m[0] >= m[1] - 2:
-            # Brown in the spring photo: the moor grass of the Peel, not a green pasture.
-            s = "heath"
-            cats[i] = CAT[s]
-            c = 0.45 * np.array(STYLES["heath"], np.float32) + 0.55 * m * np.array((1.08, 1.02, 0.9), np.float32)
-        elif s in ("meadow", "grass", "berm"):
+            c = 0.45 * c + 0.55 * m
+        elif s == "meadow":
+            c = (0.6 * c + 0.4 * m) * (0.96 + 0.08 * rng.random())
+        elif s in ("grass", "berm"):
             c = c * (0.94 + 0.12 * rng.random())
         elif s == "yard":
             c = 0.55 * m + 0.45 * c
         elif s == "heath":
             c = 0.5 * c + 0.5 * m
         base[i] = c
+        if rings is None:
+            continue
         ext = np.asarray(rings[0])[:, :2]
         ext = ext - ext.mean(0)
         w, v = np.linalg.eigh(ext.T @ ext)
         stripes_dir[i] = math.atan2(v[1, -1], v[0, -1])
     base[0] = STYLES["gap"]
+    if n_gap:
+        # Furrow direction of the fields cut from the satellite image: the long axis of their pixels.
+        sub = ids[::8, ::8]
+        yy, xx = np.nonzero(sub > n_real)
+        lab = sub[yy, xx]
+        for k in np.unique(lab):
+            m = lab == k
+            pts = np.column_stack([xx[m], -yy[m]]).astype(np.float64)
+            if len(pts) < 3:
+                continue
+            pts -= pts.mean(0)
+            _, v = np.linalg.eigh(pts.T @ pts)
+            stripes_dir[k] = math.atan2(v[1, -1], v[0, -1])
 
     cat = cats[ids]
     img = base[ids]  # (N, N, 3) float32
@@ -289,30 +281,13 @@ def main():
     img[yard & ~greenish] = paving * (0.97 + 0.05 * n1[yard & ~greenish])[:, None]
     del sm, greenish, yard
 
-    # Real objects from the aerial photo: parked cars, road markings, garden paths, sheds' surroundings.
-    # Only distinct things come through (a strong local contrast), not the photo's grain.
-    paved = np.isin(cat, [CAT[k] for k in ("asphalt", "motorway", "concrete_pavers", "tiles", "clinkers", "concrete",
-                                           "gravel", "grass_pavers", "bridge")]) & ~road_rim
-    yard = cat == CAT["yard"]
-    lum = aerial.astype(np.float32).mean(-1)
-    strong = np.abs(lum - ndi.gaussian_filter(lum, 5)) > 14
-    strong = ndi.binary_opening(strong, iterations=1)  # objects, not single noisy pixels
-    del lum
-    for k in range(3):
-        ch = aerial[..., k].astype(np.float32)
-        hp = np.where(strong, np.clip(ch - ndi.gaussian_filter(ch, 5), -60, 60), 0)
-        img[..., k][paved] += 0.7 * hp[paved]
-        img[..., k][yard] += 0.3 * hp[yard]
-        del ch, hp
-    del paved, yard, strong
-
-    # Keep a little of the real ground texture (tracks, paths, field patterns) on soft surfaces.
-    lum = aerial.astype(np.float32).mean(-1)
-    detail = lum - ndi.uniform_filter(lum, 9)
-    detail = np.clip(detail, -18, 18)
-    keep = np.isin(cat, [CAT[k] for k in ("field", "heath", "meadow", "marsh", "dirt", "sand", "gap")]) & ~road_rim
-    img[keep] += (0.2 * detail[keep])[:, None]
-    del lum, detail, keep
+    # Gardens: mostly lawn, with darker beds and shrubs and now and then a patio, in blobs of a few metres.
+    garden = cat == CAT["garden"]
+    n3 = value_noise((NY, NX), 6 / GROUND_RES, 5, octaves=2)
+    img[garden] *= (0.97 + 0.06 * n1[garden])[:, None]
+    img[garden & (n3 > 0.66)] = np.array((90, 128, 60), np.float32)
+    img[garden & (n3 < 0.2)] = np.array((172, 166, 150), np.float32)
+    del garden, n3
 
     # Pavement patterns.
     # Not on the roads: their layer is sampled by sharp-edged polygons, where a 1 m grid turns into moiré.
@@ -347,7 +322,7 @@ def main():
     del hard, border, road_rim
 
     # Baked shadows from buildings and trees, plus a contact shadow along every wall.
-    shadow, contact = compute_shadows()
+    shadow, contact = compute_shadows(res=LIDAR_RES)
     img *= np.where(shadow[..., None], np.array((0.62, 0.66, 0.8), np.float32), 1.0)
     img[contact] *= 0.8
     del shadow, contact
@@ -367,7 +342,7 @@ def main():
     save_chunks(road_img, BUILD / "roads")
     del road_img
     Image.fromarray(full_preview).save(BUILD / "ground_preview.png")
-    save_road_polygons(polys, roads, cats)
+    save_road_polygons(polys[:n_real], roads, cats)
     print("ground done")
 
 
@@ -417,7 +392,7 @@ def save_road_polygons(polys, roads, cats):
         for part in getattr(shape, "geoms", [shape]):
             if part.geom_type != "Polygon" or part.is_empty:
                 continue
-            out.append({"rings": [rounded(part.exterior), *map(rounded, part.interiors)], "bridge": coll == "overbruggingsdeel"})
+            out.append({"rings": [rounded(part.exterior), *map(rounded, part.interiors)], "bridge": coll == "bridge"})
             kinds.setdefault(names[cats[i]], []).append(part)
 
     edges = []
@@ -439,14 +414,14 @@ def paint_osm(img, cat):
     path = RAW / "osm_landmarks.json"
     if not path.exists():
         return
-    from geo import wgs_to_rd
+    from geo import wgs_to_grid
 
     for el in json.load(open(path))["elements"]:
         t = el.get("tags", {})
         g = el.get("geometry")
         if el["type"] != "way" or not g:
             continue
-        rd = np.array([wgs_to_rd(p["lat"], p["lon"]) for p in g])
+        rd = np.array([wgs_to_grid(p["lat"], p["lon"]) for p in g])
         px = [((x - XMIN) / GROUND_RES, (YMAX - y) / GROUND_RES) for x, y in rd]
         x0, y0 = np.floor(np.min(px, 0)).astype(int) - 4
         x1, y1 = np.ceil(np.max(px, 0)).astype(int) + 4
@@ -574,7 +549,8 @@ def compute_shadows(res=0.5):
     occupied = top > 0.3
     shadow &= ~occupied
     contact = ndi.binary_dilation(occupied & (bot < 0.5) & (top > 1.5), iterations=1) & ~occupied
-    up = lambda m: np.repeat(np.repeat(m, 2, 0), 2, 1)
+    f = int(round(res / GROUND_RES))
+    up = lambda m: np.repeat(np.repeat(m, f, 0), f, 1)
     return up(shadow), up(contact)
 
 

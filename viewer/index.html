@@ -1,20 +1,20 @@
 <!doctype html>
-<html lang="nl">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Isometrisch Helenaveen</title>
-<meta name="description" content="Het veendorp Helenaveen in miniatuur, nagebouwd uit openbare kaarten, hoogtemetingen en een luchtfoto.">
+<title>Isometric Houghton Conquest</title>
+<meta name="description" content="The Bedfordshire village of Houghton Conquest in miniature, rebuilt from OpenStreetMap, Environment Agency lidar and a satellite image.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://jankeesvw.github.io/isometric-helenaveen/">
-<meta property="og:title" content="Isometrisch Helenaveen">
-<meta property="og:description" content="Het veendorp Helenaveen in miniatuur, nagebouwd uit openbare kaarten, hoogtemetingen en een luchtfoto.">
-<meta property="og:image" content="https://jankeesvw.github.io/isometric-helenaveen/og.png">
+<meta property="og:url" content="https://markallisongit.github.io/isometric-houghton-conquest/">
+<meta property="og:title" content="Isometric Houghton Conquest">
+<meta property="og:description" content="The Bedfordshire village of Houghton Conquest in miniature, rebuilt from OpenStreetMap, Environment Agency lidar and a satellite image.">
+<meta property="og:image" content="https://markallisongit.github.io/isometric-houghton-conquest/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Helenaveen in isometrische pixel art op een avond, met de kerk, de Helenavaart en brandende straatlantaarns">
+<meta property="og:image:alt" content="Houghton Conquest in isometric pixel art, with All Saints church, the High Street and the fields around it">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://jankeesvw.github.io/isometric-helenaveen/og.png">
+<meta name="twitter:image" content="https://markallisongit.github.io/isometric-houghton-conquest/og.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -26,7 +26,7 @@
     --fg: #ece6d6;
     --muted: #a3a497;
     --peat: #d2b47a;       /* the sand under the peat, from the side of the block */
-    --water: #6fa6cf;      /* the Helenavaart */
+    --water: #6fa6cf;      /* ponds and lakes */
     --display: "IBM Plex Serif", Georgia, serif;
     --body: "IBM Plex Sans", system-ui, sans-serif;
     --mono: "IBM Plex Mono", ui-monospace, monospace;
@@ -206,7 +206,7 @@
   #legend i { display: inline-block; width: 18px; height: 0; border-top: 3px dashed #e2574c; vertical-align: middle; margin-right: 4px; }
   #legend i.long { border-top: 4px solid #f2c14e; }
   #legend b { font-weight: inherit; }
-  /* Helenaveen van toen: a guided tour with a paper card for each stop. */
+  /* Through time: a guided tour with a paper card for each stop. */
   body.tour #readout, body.tour #minimap-frame { display: none; }
   .stop {
     width: 26px;
@@ -342,7 +342,7 @@
 </style>
 </head>
 <body>
-<div id="map" aria-label="Isometrische kaart van Helenaveen" data-en-label="Isometric map of Helenaveen"></div>
+<div id="map" aria-label="Isometric map of Houghton Conquest" data-en-label="Isometric map of Houghton Conquest"></div>
 <svg width="0" height="0" style="position: absolute" aria-hidden="true">
   <filter id="dusk" color-interpolation-filters="sRGB">
     <feColorMatrix type="matrix" values="0.24 0.05 0.02 0 0  0.04 0.28 0.06 0 0.01  0.05 0.11 0.46 0 0.04  0 0 0 1 0"/>
@@ -353,30 +353,30 @@
 
 <section id="intro" class="panel">
   <div class="intro-head">
-    <h1>Helenaveen</h1>
+    <h1>Houghton Conquest</h1>
     <button type="button" id="intro-toggle" aria-expanded="true" aria-controls="intro-body" aria-label="Menu in- of uitklappen" data-en-label="Show or hide the menu"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 5l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   </div>
   <div id="intro-body">
-  <p data-en="The peat village on the Helenavaart canal in miniature, from the A67 motorway to the Willem III farm.">Het veendorp aan de Helenavaart in miniatuur, van de A67 tot de Willem III-hoeve.</p>
-  <p class="long" data-en="Every house, every greenhouse and every tree stands in its real place, rebuilt from public maps, height measurements and an aerial photo. Scroll or pinch to zoom, or look up an address below.">Elk huis, elke kas en elke boom staat op zijn echte plek, nagebouwd uit openbare kaarten, hoogtemetingen en een luchtfoto. Scroll of knijp om te zoomen, of zoek hieronder een adres.</p>
+  <p>The Bedfordshire village between Bedford and Ampthill in miniature, from the Midland Main Line to the ruins of Houghton House on the ridge to the south.</p>
+  <p class="long">Every house and every tree stands in its real place, rebuilt from OpenStreetMap, Environment Agency lidar and a Sentinel-2 satellite image; the roofs are fitted to the lidar. Scroll or pinch to zoom, or look up a street or place below.</p>
   <form id="search" role="search">
-    <input id="goto" list="place-list" placeholder="Ga naar een adres of plek…" autocomplete="off" aria-label="Ga naar een adres of plek" data-en-placeholder="Go to an address or place…" data-en-label="Go to an address or place">
+    <input id="goto" list="place-list" placeholder="Go to a street or place…" autocomplete="off" aria-label="Go to a street or place">
     <datalist id="place-list"></datalist>
   </form>
   <div id="found" aria-live="polite"></div>
-  <div id="legend"><span><i></i><b data-en="Walking junctions">Wandelknooppunten</b></span><span><i class="long"></i><b data-en="LAW 13 trail Dwars door Brabant">LAW 13 Dwars door Brabant</b></span></div>
-  <div id="places" role="group" aria-label="Snel naar" data-en-label="Go to">
-    <button type="button" data-rd="191850,377850" data-en="Village">Dorp</button>
-    <button type="button" data-place="Sint-Willibrorduskerk" data-en="Church">Kerk</button>
-    <button type="button" data-rd="192280,377570" data-en="Greenhouses">Kassen</button>
-    <button type="button" data-rd="192750,378900">Peel</button>
-    <button type="button" data-place="Hoeve Willem III">Willem III</button>
-    <button type="button" data-rd="191950,376660">A67</button>
-    <button type="button" id="routes-toggle" aria-pressed="false" data-en="Walking routes">Wandelroutes</button>
+  <div id="legend"><span><i></i><b>Local walks</b></span><span><i class="long"></i><b>Long-distance paths</b></span></div>
+  <div id="places" role="group" aria-label="Go to">
+    <button type="button" data-grid="504555,241553">Village</button>
+    <button type="button" data-place="Church of All Saints">Church</button>
+    <button type="button" data-place="Houghton House">Houghton House</button>
+    <button type="button" data-place="King's Wood and Glebe Meadows">King's Wood</button>
+    <button type="button" data-grid="503300,240600">How End</button>
+    <button type="button" data-grid="505350,241950">Chapel End</button>
+    <button type="button" id="routes-toggle" aria-pressed="false">Walking routes</button>
   </div>
-  <div id="series" role="group" aria-label="Ontdek" data-en-label="Explore">
-    <span data-en="Explore">Ontdek</span>
-    <button type="button" id="tour-toggle" aria-pressed="false" data-en="Helenaveen back then">Helenaveen van toen</button>
+  <div id="series" role="group" aria-label="Explore">
+    <span>Explore</span>
+    <button type="button" id="tour-toggle" aria-pressed="false">Through time</button>
   </div>
   </div>
 </section>
@@ -391,9 +391,9 @@
 </div>
 
 <div id="readout" class="panel">
-  <div id="coords"><b>GPS</b> 51,3886° N · 5,9166° O</div>
+  <div id="coords"><b>GPS</b> 52.0625° N · 0.4763° W</div>
   <div id="scale">1 pixel = 25 cm</div>
-  <div class="credits" data-en-html="Data: &lt;a href=&quot;https://3dbag.nl&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;3D BAG&lt;/a&gt;, BGT, AHN and aerial photo via &lt;a href=&quot;https://www.pdok.nl&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;PDOK&lt;/a&gt;, &lt;a href=&quot;https://www.openstreetmap.org/copyright&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;OpenStreetMap&lt;/a&gt;">Data: <a href="https://3dbag.nl" target="_blank" rel="noopener">3D BAG</a>, BGT, AHN en luchtfoto via <a href="https://www.pdok.nl" target="_blank" rel="noopener">PDOK</a>, <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a></div>
+  <div class="credits">Data: lidar © <a href="https://environment.data.gov.uk/survey" target="_blank" rel="noopener">Environment Agency</a> (OGL), <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap</a>, contains modified <a href="https://dataspace.copernicus.eu" target="_blank" rel="noopener">Copernicus Sentinel</a> data 2026, <a href="https://historicengland.org.uk/listing/the-list/" target="_blank" rel="noopener">Historic England</a></div>
 </div>
 
 <div id="minimap-frame" class="panel" aria-hidden="true"><div id="minimap"></div></div>
@@ -401,7 +401,7 @@
 <button type="button" id="make" aria-haspopup="dialog" data-en="Make your own village">Maak je eigen dorp</button>
 <dialog id="make-dialog" aria-labelledby="make-title">
   <h2 id="make-title" data-en="Make this for your own village">Maak dit voor je eigen dorp</h2>
-  <p class="by" data-en-html="Hi, I&#x27;m &lt;a class=&quot;x&quot; href=&quot;https://x.com/intent/follow?screen_name=jankeesvw&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;&lt;svg viewBox=&quot;0 0 24 24&quot; aria-hidden=&quot;true&quot;&gt;&lt;path d=&quot;M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z&quot;/&gt;&lt;/svg&gt;@jankeesvw&lt;/a&gt;. I rebuilt my village Helenaveen in isometric pixel art, with Claude Code and nothing but open data.">Hoi, ik ben <a class="x" href="https://x.com/intent/follow?screen_name=jankeesvw" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>@jankeesvw</a>. Ik heb mijn dorp Helenaveen nagebouwd in isometrische pixel art, met Claude Code en alleen open data.</p>
+  <p class="by">This map is built on <a href="https://github.com/jankeesvw/isometric-helenaveen" target="_blank" rel="noopener">Isometric Helenaveen</a> by <a class="x" href="https://x.com/intent/follow?screen_name=jankeesvw" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>@jankeesvw</a>, a rebuild of Helenaveen in the Netherlands in isometric pixel art, made with Claude Code and nothing but open data.</p>
   <p data-en="Want one of your own village or town, anywhere in the world? Paste this prompt into Claude Code or another coding agent and fill in your place. The agent finds the open data for your country: buildings, heights, aerial photos and OpenStreetMap. Then tell it the stories that only the people who live there know.">Wil je er ook een van jouw dorp of stad, waar ook ter wereld? Plak deze opdracht in Claude Code of een andere codeeragent en vul je plek in. De agent zoekt de open data van jouw land erbij: gebouwen, hoogtes, luchtfoto's en OpenStreetMap. Vertel hem daarna de verhalen die alleen de mensen die er wonen kennen.</p>
   <pre id="make-prompt" data-en="Make an isometric pixel-art map of [your village or town, and the country], like Isometric Helenaveen: https://jankeesvw.github.io/isometric-helenaveen/
 
@@ -448,7 +448,7 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
 </dialog>
 <div id="tip" hidden></div>
 
-<section id="tour" class="card" hidden aria-live="polite" aria-label="Rondleiding Helenaveen van toen" data-en-label="Tour: Helenaveen back then">
+<section id="tour" class="card" hidden aria-live="polite" aria-label="Tour: Houghton Conquest through time">
   <div class="card-head"><span id="tour-year"></span><span id="tour-count"></span></div>
   <h2 id="tour-title"></h2>
   <figure id="tour-figure" hidden><div id="tour-frame" class="frame"><img id="tour-img" alt=""></div><div id="tour-dots"></div><figcaption id="tour-credit"></figcaption></figure>
@@ -485,9 +485,8 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
 
   // Language: Dutch or English, after the browser's language; a link can ask for one (?lang=en). Static text carries its English in data-en (text), data-en-html, data-en-label (aria-label),
   // data-en-title and data-en-placeholder; text from the data files is looked up by its Dutch in en.json.
-  const askedLang = new URLSearchParams(location.search).get('lang');
-  const LANG = askedLang === 'en' || askedLang === 'nl' ? askedLang
-    : (navigator.languages || [navigator.language]).some((l) => /^nl\b/i.test(l || '')) ? 'nl' : 'en';
+  // This map is in English only; the Dutch of the original lives on as fallbacks in the markup.
+  const LANG = 'en';
   let EN = {};
   const T = (text) => (LANG === 'en' && text && EN[text]) || text;
   const L = (nl, en) => (LANG === 'en' ? en : nl);
@@ -496,7 +495,7 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
   const ATTRS = [['enLabel', 'aria-label'], ['enTitle', 'title'], ['enPlaceholder', 'placeholder']];
   function applyLang() {
     document.documentElement.lang = LANG;
-    document.title = L('Isometrisch Helenaveen', 'Isometric Helenaveen');
+    document.title = 'Isometric Houghton Conquest';
     for (const [en, nl, prop] of SWAPS) {
       for (const el of document.querySelectorAll(`[data-${en.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase())}]`)) {
         if (el.dataset[nl] === undefined) el.dataset[nl] = el[prop];
@@ -512,7 +511,7 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
     }
     for (const f of onLang) f();
   }
-  fetch('en.json').then((r) => r.json()).then((d) => { EN = d; if (LANG === 'en') applyLang(); }).catch(() => {});
+  applyLang();
   const COS30 = Math.cos(Math.PI / 6);
 
   // The view: the compass direction the camera looks in (map.json "views"; 45 is north-east). A ground point's screen
@@ -548,28 +547,19 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
     viewer.removeOverlay(el);
   }
 
-  const rdToLocal = (X, Y) => ({ x: X - M.area.cx, z: M.area.cy - Y });
+  const gridToLocal = (X, Y) => ({ x: X - M.area.cx, z: M.area.cy - Y });
 
-  // Rijksdriehoeksstelsel to WGS84, the usual polynomial approximation (about a meter off).
-  function rdToWgs(X, Y) {
-    const dX = (X - 155000) * 1e-5, dY = (Y - 463000) * 1e-5;
-    const N = 3235.65389 * dY - 32.58297 * dX ** 2 - 0.2475 * dY ** 2 - 0.84978 * dX ** 2 * dY - 0.0655 * dY ** 3
-      - 0.01709 * dX ** 2 * dY ** 2 - 0.00738 * dX + 0.0053 * dX ** 4 - 0.00039 * dX ** 2 * dY ** 3
-      + 0.00033 * dX ** 4 * dY - 0.00012 * dX * dY;
-    const E = 5260.52916 * dX + 105.94684 * dX * dY + 2.45656 * dX * dY ** 2 - 0.81885 * dX ** 3
-      + 0.05594 * dX * dY ** 3 - 0.05607 * dX ** 3 * dY + 0.01199 * dY - 0.00256 * dX ** 3 * dY ** 2
-      + 0.00128 * dX * dY ** 4 + 0.00022 * dY ** 2 - 0.00022 * dX ** 2 + 0.00026 * dX ** 5;
-    return [52.1551744 + N / 3600, 5.38720621 + E / 3600];
+  // British National Grid <-> WGS84: cubic polynomials fitted over the area at build time (scripts/geo.py, js_fit),
+  // well under a centimetre off.
+  const cubic = (c, a, b) => c[0] + c[1] * a + c[2] * b + c[3] * a * a + c[4] * a * b + c[5] * b * b
+    + c[6] * a ** 3 + c[7] * a * a * b + c[8] * a * b * b + c[9] * b ** 3;
+  function gridToWgs(X, Y) {
+    const g = M.area.geo, a = (X - M.area.cx) / 1000, b = (Y - M.area.cy) / 1000;
+    return [g.lat0 + cubic(g.lat, a, b), g.lon0 + cubic(g.lon, a, b)];
   }
-  // And back, by stepping toward the GPS point a few times: a meter of RD is near enough a meter on the ground.
-  function wgsToRd(lat, lon) {
-    let X = 155000, Y = 463000;
-    for (let i = 0; i < 6; i++) {
-      const [la, lo] = rdToWgs(X, Y);
-      X += (lon - lo) * 111320 * Math.cos((lat * Math.PI) / 180);
-      Y += (lat - la) * 111200;
-    }
-    return [X, Y];
+  function wgsToGrid(lat, lon) {
+    const g = M.area.geo, a = (lat - g.lat0) * 100, b = (lon - g.lon0) * 100;
+    return [M.area.cx + cubic(g.x, a, b), M.area.cy + cubic(g.y, a, b)];
   }
 
   const nl = (n, d) => n.toLocaleString(L('nl-NL', 'en-GB'), { minimumFractionDigits: d, maximumFractionDigits: d });
@@ -581,8 +571,8 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
     const hx = (M.area.xmax - M.area.xmin) / 2, hz = (M.area.ymax - M.area.ymin) / 2;
     if (Math.abs(g.x) > hx || Math.abs(g.z) > hz) return;
     const X = M.area.cx + g.x, Y = M.area.cy - g.z;
-    const [lat, lon] = rdToWgs(X, Y);
-    coords.innerHTML = `<b>GPS</b> ${nl(lat, 4)}° N · ${nl(lon, 4)}° ${L('O', 'E')}`;
+    const [lat, lon] = gridToWgs(X, Y);
+    coords.innerHTML = `<b>GPS</b> ${nl(lat, 4)}° N · ${nl(Math.abs(lon), 4)}° ${lon < 0 ? 'W' : 'E'}`;
   }
 
   function updateZoom() {
@@ -594,10 +584,10 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
     scaleEl.textContent = `1 pixel = ${nl(100 / M.scale, 0)} cm · zoom ${ratio}`;
   }
 
-  // The view the map opens on and the home button goes back to: the village school in the middle, at 1:1.3. The point
-  // is the middle of the school building, 3 m up, so it sits in the middle whichever way the map is turned.
+  // The view the map opens on and the home button goes back to: the church and the High Street in the middle, at 1:1.3,
+  // 3 m up, so the spot stays in the middle whichever way the map is turned.
   function goHome(now) {
-    const vp = viewer.viewport, { x, z } = rdToLocal(191904, 377867);
+    const vp = viewer.viewport, { x, z } = gridToLocal(504450, 241480);
     vp.zoomTo(vp.imageToViewportZoom(1 / 1.3), null, now);
     vp.panTo(vp.imageToViewportCoordinates(groundToImage(x, z, 3)), now);
   }
@@ -614,7 +604,7 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
       pin = document.createElement('div');
       pin.className = 'pin';
       pin.innerHTML = '<svg width="30" height="40" viewBox="0 0 30 40" aria-hidden="true"><path d="M15 38.5S3.5 24.6 3.5 15a11.5 11.5 0 0 1 23 0c0 9.6-11.5 23.5-11.5 23.5z" fill="#c8452f" stroke="#1b1d22" stroke-width="2"/><circle cx="15" cy="15" r="4.4" fill="#f4ead6"/></svg>';
-      const { x, z } = rdToLocal(X, Y);
+      const { x, z } = gridToLocal(X, Y);
       anchor(pin, x, z, 0);
     }
     writePin();
@@ -624,7 +614,7 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
     for (const k of ['pin', 'zoom', 'view']) q.delete(k);
     if (pinAt) {
       const vp = viewer.viewport;
-      q.set('pin', rdToWgs(...pinAt).map((v) => v.toFixed(5)).join(','));
+      q.set('pin', gridToWgs(...pinAt).map((v) => v.toFixed(5)).join(','));
       q.set('zoom', String(+vp.viewportToImageZoom(vp.getZoom()).toFixed(2)));
       if (VIEW.i) q.set('view', String(VIEW.look));
     }
@@ -646,7 +636,7 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
     const q = new URLSearchParams(location.search);
     const m = (q.get('pin') || '').match(/^(\d+(?:\.\d+)?),(\d+(?:\.\d+)?)$/);
     if (!m) return false;
-    const [X, Y] = wgsToRd(+m[1], +m[2]), { x, z } = rdToLocal(X, Y);
+    const [X, Y] = wgsToGrid(+m[1], +m[2]), { x, z } = gridToLocal(X, Y);
     if (Math.abs(x) > (M.area.xmax - M.area.xmin) / 2 || Math.abs(z) > (M.area.ymax - M.area.ymin) / 2) return false;
     const zoom = Math.min(6, Math.max(0.02, parseFloat(q.get('zoom')) || 1 / 1.3));
     const vp = viewer.viewport;
@@ -659,7 +649,7 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
   let marker = null;
   // offsetPx moves the place up on screen, to keep it clear of a panel at the bottom.
   function flyTo(X, Y, h = 0, imageZoom = 0.7, mark = false, offsetPx = 0) {
-    const { x, z } = rdToLocal(X, Y);
+    const { x, z } = gridToLocal(X, Y);
     const pt = viewer.viewport.imageToViewportCoordinates(groundToImage(x, z, h));
     viewer.viewport.zoomTo(viewer.viewport.imageToViewportZoom(imageZoom), null, false);
     const shift = viewer.viewport.deltaPointsFromPixels(new OpenSeadragon.Point(0, offsetPx), false);
@@ -700,7 +690,7 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
       id: 'map',
       // The map, and over it once more its buildings and trees on a transparent layer (map.json "objects"), so that
       // cars and walkers behind them can be drawn in between.
-      tileSources: [first.tiles || 'helenaveen_files/', ...(first.objects ? [first.objects] : [])].map(dzi),
+      tileSources: [first.tiles || 'map_files/', ...(first.objects ? [first.objects] : [])].map(dzi),
       silenceMultiImageWarnings: true,
       showNavigationControl: false,
       showNavigator: true,
@@ -892,7 +882,7 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
     if (series && e.key === 'ArrowLeft') openSeries(series.cat, series.pos - 1);
   });
 
-  // Helenaveen van toen (history.json, built by scripts/build_history.py): numbered stops and a guided tour.
+  // Houghton Conquest through time (history.json, built by scripts/build_history.py): numbered stops and a guided tour.
   let stops = [], stopEls = [], current = -1;
   const tourBtn = document.getElementById('tour-toggle');
   const tourEl = document.getElementById('tour');
@@ -911,7 +901,7 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
       el.style.marginLeft = `${-13 + 28 * (seen[key] || 0)}px`;
       seen[key] = (seen[key] || 0) + 1;
       el.addEventListener('click', (e) => { e.stopPropagation(); goStop(i); });
-      const { x, z } = rdToLocal(s.x, s.y);
+      const { x, z } = gridToLocal(s.x, s.y);
       anchor(el, x, z, s.h);
       // OpenSeadragon swallows clicks on overlays unless they get their own tracker.
       new OpenSeadragon.MouseTracker({ element: el, clickHandler: () => goStop(i) });
@@ -934,11 +924,11 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
     if (marker) viewer.removeOverlay(marker);
     marker = null;
     tourFly(s);
-    history.replaceState(null, '', `#van-toen-${s.n}`);
+    history.replaceState(null, '', `#tour-${s.n}`);
   }
 
   // The text of the current stop, again after a language switch.
-  const READ_MORE = () => L('Lees het verhaal op Het Helenaveen van toen →', 'Read the story on Het Helenaveen van toen (in Dutch) →');
+  const READ_MORE = () => 'Read more →';
   function renderStop() {
     const s = stops[current];
     document.getElementById('tour-year').textContent = T(s.year);
@@ -987,7 +977,7 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
     for (const sp of [vp.centerSpringX, vp.centerSpringY, vp.zoomSpring]) sp.animationTime = t;
   }
   function tourFly(s) {
-    const { x, z } = rdToLocal(s.x, s.y);
+    const { x, z } = gridToLocal(s.x, s.y);
     glide(viewer.viewport.imageToViewportCoordinates(groundToImage(x, z, s.h)), s.zoom, tourEl);
   }
   // imageZoom null keeps the current zoom.
@@ -1111,7 +1101,7 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
     openFromHash();
   });
 
-  // Case, hyphens and spaces don't matter, so "#Sint-Willibrorduskerk" and "sint willibrordus" both work.
+  // Case, hyphens and spaces don't matter, so "#Houghton-House" and "houghton house" both work.
   const norm = (t) => t.trim().toLowerCase().replace(/[-\s]+/g, ' ');
   function findPlace(q) {
     const s = norm(q);
@@ -1143,11 +1133,11 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
     if (p) goPlace(p);
   });
 
-  // A shared link like …#Sint-Willibrorduskerk opens on that place.
+  // A shared link like …#Houghton-House opens on that place.
   function openFromHash() {
     if (!viewer || !viewer.world.getItemCount()) return;
     const h = decodeURIComponent(location.hash.slice(1));
-    const tour = h.match(/^van-toen(?:-(\d+))?$/);
+    const tour = h.match(/^tour(?:-(\d+))?$/);
     if (tour) {
       if (stops.length) goStop((parseInt(tour[1] || '1') || 1) - 1);
       return;
@@ -1159,7 +1149,7 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
   }
   window.addEventListener('hashchange', openFromHash);
 
-  document.querySelectorAll('#places button[data-rd], #places button[data-place]').forEach((b) => {
+  document.querySelectorAll('#places button[data-grid], #places button[data-place]').forEach((b) => {
     b.addEventListener('click', () => {
       if (!viewer) return;
       if (b.dataset.place) {
@@ -1167,7 +1157,7 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
         if (p) goPlace(p);
       } else {
         found.textContent = '';
-        const [X, Y] = b.dataset.rd.split(',').map(Number);
+        const [X, Y] = b.dataset.grid.split(',').map(Number);
         flyTo(X, Y);
       }
     });
@@ -1412,7 +1402,7 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
     const geese = Math.random() < 0.6;
     const ang = geese ? Math.atan2(1, -1) + (Math.random() - 0.5) * 1.2 : Math.random() * Math.PI * 2;
     const dx = Math.cos(ang), dz = Math.sin(ang);
-    const village = rdToLocal(191900, 378000);
+    const village = gridToLocal(...M.area.village);
     const near = Math.random() < 0.5;
     const tx = near ? village.x + (Math.random() - 0.5) * 900 : (Math.random() * 2 - 1) * M.area.hx * 0.8;
     const tz = near ? village.z + (Math.random() - 0.5) * 900 : (Math.random() * 2 - 1) * M.area.hz * 0.8;
@@ -1515,7 +1505,6 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
 
   function drawMover(ctx, m, x, z, dx, dz) {
     if (m.mode === WALK) return drawWalker(ctx, m, x, z, dx, dz);
-    if (m.mode === SWIM) return drawDippers(ctx, m);
     const V = VEHICLES[m.type];
     drawBoxes(ctx, x, z, dx, dz, V.boxes, (role) => (role === 'dark' ? DARK : role === 'load' ? m.load : m.paint), { sort: V.sort, outline: !V.bike });
   }
@@ -1567,44 +1556,6 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
     }
   }
 
-  // The dippers: six people in a circle in the Helenavaart in front of In d'Ouwe Peel, in up to their shoulders, a few
-  // in a woolly hat, bobbing a little while the circle slowly turns.
-  let dippers = null;
-  function makeDippers() {
-    const c = rdToLocal(192072.2, 377911.4);
-    const people = Array.from({ length: 6 }, (_, i) => ({
-      a: (i / 6) * Math.PI * 2, phase: Math.random() * 7, skin: tone(SKIN),
-      top: Math.random() < 0.5 ? tone(SKIN) : tone(JACKETS), hat: Math.random() < 0.6 ? tone(JACKETS) : tone(HEADS),
-    }));
-    return { mode: SWIM, alpha: 1, x: c.x, z: c.z, people };
-  }
-  function ripple(ctx, x, z, r, alpha) {
-    const [cx, cy] = toPx(x, z, 0), w = r * M.scale;
-    ctx.beginPath();
-    ctx.ellipse(cx, cy, w, w / 2, 0, 0, Math.PI * 2);
-    ctx.lineWidth = 0.8;
-    ctx.strokeStyle = `rgba(214,232,244,${alpha})`;
-    ctx.stroke();
-  }
-  function drawDippers(ctx, d) {
-    const R = 1.7, spin = clock * 0.04;
-    ripple(ctx, d.x, d.z, R + 0.6 + 0.08 * Math.sin(clock * 0.9), 0.35);
-    const parts = d.people.map((p) => {
-      const a = p.a + spin, px = d.x + Math.cos(a) * R, pz = d.z + Math.sin(a) * R;
-      const bob = 0.04 * Math.sin(clock * 1.6 + p.phase);
-      return [depthOf(px, pz), () => {
-        ripple(ctx, px, pz, 0.4 + 0.05 * Math.sin(clock * 1.6 + p.phase), 0.7);
-        drawBoxes(ctx, px, pz, -Math.cos(a), -Math.sin(a), [
-          [-0.13, 0.13, 0.23, 0, 0.3 + bob, p.top],
-          [-0.1, 0.1, 0.1, 0.3 + bob, 0.54 + bob, p.skin],
-          [-0.11, 0.08, 0.11, 0.52 + bob, 0.63 + bob, p.hat],
-        ]);
-      }];
-    });
-    parts.sort((a, b) => b[0] - a[0]);
-    for (const [, draw] of parts) draw();
-  }
-
   // A bird: two wings that beat, with its shadow far off on the ground.
   function drawBird(ctx, f, b, inView) {
     const nx = -f.dz, nz = f.dx;
@@ -1652,9 +1603,6 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
       const [x, z, dx, dz] = place(m);
       if (inView(x, z, 0)) (objectsLayer && m.behind ? behind : front).push([depthOf(x, z), m, x, z, dx, dz]);
     }
-    // The dippers sit low in open water: drawn under the buildings and trees layer, so whatever stands in front hides them.
-    dippers ||= makeDippers();
-    if (k >= 0.35 && inView(dippers.x, dippers.z, 0)) (objectsLayer ? behind : front).push([depthOf(dippers.x, dippers.z), dippers, dippers.x, dippers.z, 0, 0]);
     paint(ctx, b, k, front, inView);
   }
 
@@ -1701,7 +1649,7 @@ Werk stap voor stap, controleer de licenties van de data die je gebruikt, en vra
   // A street lamp every 34 m on one side of each village street: every residential street, and the bigger roads
   // within 650 m of the church.
   function makeLamps() {
-    const village = rdToLocal(191900, 378000), done = new Set(), out = [];
+    const village = gridToLocal(...M.area.village), done = new Set(), out = [];
     for (const l of lanes) {
       const anywhere = l.c === 'residential' || l.c === 'living_street';
       if (done.has(l.e) || !(anywhere || l.c === 'tertiary' || l.c === 'unclassified')) continue;

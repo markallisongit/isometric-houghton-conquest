@@ -1,4 +1,4 @@
-"""Aerial photo mosaic at GROUND_RES, with row 0 at the north edge."""
+"""Ground colour mosaic at GROUND_RES (the Sentinel-2 image from scripts/sentinel.py), with row 0 at the north edge."""
 
 import numpy as np
 from PIL import Image
@@ -14,7 +14,7 @@ def load_aerial():
     out = np.zeros((NY * px, NX * px, 3), dtype=np.uint8)
     for ix in range(NX):
         for iy in range(NY):
-            img = np.array(Image.open(RAW / "aerial" / f"{ix}_{iy}.jpg").convert("RGB"))
+            img = np.array(Image.open(RAW / "aerial" / f"{ix}_{iy}.png").convert("RGB"))
             row = (NY - 1 - iy) * px
             out[row : row + px, ix * px : ix * px + px] = img
     BUILD.mkdir(parents=True, exist_ok=True)

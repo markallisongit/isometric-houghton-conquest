@@ -1,13 +1,13 @@
 # /// script
 # requires-python = ">=3.11"
-# dependencies = ["numpy", "pillow", "shapely"]
+# dependencies = ["numpy", "pillow", "shapely", "pyproj"]
 # ///
 """Traffic for the viewer: lanes along the OpenStreetMap roads and paths that little cars, cyclists and walkers use.
 
-A lane runs one way along a stretch of road between two junctions, on the right-hand side: the BGT carriageways and
-cycle paths show how wide the road really is and where it lies, since the OpenStreetMap line is seldom exactly in
-the middle. Cars keep to the middle of their half, cyclists to its edge, walkers to the pavement when the BGT has one
-next to the road, and to the edge of the road when it doesn't. Where a building or a tree
+A lane runs one way along a stretch of road between two junctions, on the side of the road the country drives on
+(LEFT_HAND for Britain): the road surfaces from scripts/osm.py show how wide the road is. Cars keep to the middle of
+their half, cyclists to its edge, walkers to the pavement when there is one next to the road, and to the edge of the
+road when there isn't. Where a building or a tree
 crown stands in front of the road on screen, the lane records a hidden stretch, so a car disappears behind it instead
 of being drawn on the roof; under a tree crown it shows faintly, as if seen through the leaves. Roads that leave the map end in an exit: a car that drives out comes back in at another
 exit of the same road class.
@@ -34,7 +34,10 @@ from shapely.geometry import LineString, Point, box, shape
 from shapely.ops import unary_union
 
 from config import BUILD, CX, CY, RAW, VIEWS, XMAX, XMIN, YMAX, YMIN
-from geo import screen, wgs_to_rd
+from geo import screen, wgs_to_grid
+
+# Britain drives on the left: every lane, cyclist and walker offset is mirrored to the other side of its road.
+LEFT_HAND = True
 
 RES = 0.5  # occlusion raster, screen meters per pixel
 STEP = 0.5  # lane sampling for hidden stretches, meters
@@ -62,7 +65,7 @@ BIKES = {"yes", "designated", "permissive"}
 
 
 def local(lat, lon):
-    x, y = wgs_to_rd(lat, lon)
+    x, y = wgs_to_grid(lat, lon)
     return x - CX, CY - y
 
 
@@ -156,13 +159,15 @@ def clip(edges):
 
 
 def surfaces():
-    """The BGT carriageways and cycle paths in local meters, to measure where each road lies and how wide it is."""
+    """The carriageways, cycle paths and pavements (scripts/osm.py) in local meters, to measure where each road lies
+    and how wide it is."""
+    from shapely.geometry import Polygon
+
     groups = {"road": [], "cycle": [], "foot": []}
-    for f in json.loads((RAW / "bgt_wegdeel.geojson").read_text())["features"]:
-        fn = f["properties"].get("functie") or ""
-        key = "road" if fn.startswith("rijbaan") else "cycle" if fn == "fietspad" else "foot" if fn == "voetpad" else None
-        if key and f["geometry"]:
-            groups[key].append(affinity.affine_transform(shape(f["geometry"]), [1, 0, 0, -1, -CX, CY]).buffer(0))
+    for f in json.loads((BUILD / "surfaces.json").read_text()):
+        if f.get("layer") in groups:
+            poly = Polygon(f["rings"][0], f["rings"][1:])
+            groups[f["layer"]].append(affinity.affine_transform(poly, [1, 0, 0, -1, -CX, CY]).buffer(0))
     out = {k: unary_union(v) for k, v in groups.items()}
     for g in out.values():
         prepare(g)
@@ -271,12 +276,14 @@ def lanes(edges):
                 off = 0.0 if e["oneway"] else width
                 bike = off if e["c"] in ("cycleway", "track") else off + 0.75
                 walk = off if e["c"] in ("footway", "track") else bike + 0.25
+            if LEFT_HAND:
+                off, bike, walk = -off, -bike, -walk
             p = offset(pts, off)
             if len(p) >= 2:
                 lane = {"e": i, "a": a, "b": b, "p": p, **{k: e[k] for k in ("c", "v", "w", "d", "wb", "db", "ww", "dw")}}
                 lane["bo"], lane["wo"] = round(bike - off, 2), round(walk - off, 2)
                 out.append(lane)
-    lanes.measured = f"{measured} of {len(edges)} stretches of road measured on the BGT"
+    lanes.measured = f"{measured} of {len(edges)} stretches of road measured on the road surfaces"
     return out
 
 

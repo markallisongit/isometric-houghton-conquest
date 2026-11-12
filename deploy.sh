@@ -6,7 +6,9 @@ builtin cd "$(dirname "$0")"
 [ -f site/index.html ] || { echo "site/ is empty: run ./build.sh first" >&2; exit 1; }
 cp viewer/index.html site/index.html
 
-remote=$(git remote get-url origin)
+# Publishes to the gh-pages branch of DEPLOY_REMOTE, or of origin. Never to the upstream Helenaveen repository.
+remote="${DEPLOY_REMOTE:-$(git remote get-url origin)}"
+case "$remote" in *jankeesvw/isometric-helenaveen*) echo "origin is the upstream repository; set DEPLOY_REMOTE to your own" >&2; exit 1 ;; esac
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 cp -r site/. "$tmp"
